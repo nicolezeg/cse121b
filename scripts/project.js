@@ -14,10 +14,6 @@ const displayMakeup = (makeupProducts) => {
         h3.textContent = makeup.name;
         article.appendChild(h3);
 
-        const p1 = document.createElement('p');
-        p1.textContent = `Product Type: ${makeup.product_type}`;
-        article.appendChild(p1);
-
         const p2 = document.createElement('p');
         p2.textContent = `Price: ${makeup.price}`;
         article.appendChild(p2);
@@ -34,7 +30,9 @@ const displayMakeup = (makeupProducts) => {
 
 /* async getMakeup Function using fetch()*/
 const getMakeup = async () => {
-    const response = await fetch('http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline');
+    const response = await fetch('http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline', {
+        referrerPolicy: "unsafe-url"   
+    });
     makeupList = await response.json();
     displayMakeup(makeupList);
 }
@@ -55,10 +53,8 @@ function reset() {
 function filterMakeupProducts(makeupProducts) {
     reset();
     let filter = document.querySelector('#filtered').value;
-    let priceFilter = document.querySelector('#price-filter').value;
 
     console.log(filter)
-    console.log(priceFilter)
 
     switch (filter) {    
         case 'blush':
@@ -85,14 +81,25 @@ function filterMakeupProducts(makeupProducts) {
             displayMakeup(makeupProducts.filter(makeup => makeup.product_type.includes('lipstick')));
             console.log('Lipstick filter applied')
             break;         
-        case 'lip liner':
-            displayMakeup(makeupProducts.filter(makeup => makeup.product_type.includes('lip liner')));
+        case 'lip_liner':
+            displayMakeup(makeupProducts.filter(makeup => makeup.product_type.includes('lip_liner')));
             console.log('Lip liner filter applied')
             break;
-        case 'price-filter':
-            let selectedPrice = parseInt(priceFilter);
-            displayMakeup(makeupProducts.filter(makeup => makeup.price <= selectedPrice));
-            console.log(`Price filter ${selectedPrice} applied`)
+        case 'nail_polish':
+            displayMakeup(makeupProducts.filter(makeup => makeup.product_type.includes('nail_polish')));
+            console.log('Nail polish filter applied')
+            break;
+        case 'low_price':
+
+            const lowerPricedMakeup = makeupProducts.filter(makeup => makeup.price < 6);
+            displayMakeup(lowerPricedMakeup);
+            console.log(lowerPricedMakeup);
+            break;
+        case 'high_price':
+
+            const higherPricedMakeup = makeupProducts.filter(makeup => makeup.price > 10 );
+            displayMakeup(higherPricedMakeup);
+            console.log(higherPricedMakeup);
             break;
         default: 'all'
             displayMakeup(makeupProducts);
